@@ -434,7 +434,12 @@ class AppRomExtractor(npyscreen.NPSAppManaged):
         self.extract_form = self.addForm("EXTRACT", FormExtract, name="Filtered ROMs")
         self.extracting_form = self.addForm("EXTRACTING", FormExtracting, name="Extracting ...")
 
-
-if __name__ == '__main__':
+def extrom():
     app = AppRomExtractor()
     app.run()
+    
+def main():
+    extrom()
+
+if __name__ == '__main__':
+    main()
