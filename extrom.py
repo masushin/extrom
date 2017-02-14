@@ -126,7 +126,9 @@ class FormSelectOne(npyscreen.Form, FormDescription):
         self.option.values = option
         self.option.display()
 
-
+class FormPopupInfo(npyscreen.Popup,FormItems):
+    def create(self):
+        self.list = self.add(npyscreen.MultiLine)
 
 # Widgets
 class TitleFileNameComboRomSet(npyscreen.TitleFilenameCombo):
@@ -167,7 +169,7 @@ class ButtonSelect(npyscreen.ButtonPress):
 
     def whenPressed(self):
         if not self.find_parent_app().getForm("MAIN").romScaned:
-            npyscreen.notify_confirm("Please scan rom first.", title="Error")
+            npyscreen.notify_confirm("Rom set file is not specified.", title="Error")
             return
 
         mode = self.find_parent_app().getForm("MAIN").wdgtRomFilterMode.value[0]
@@ -191,7 +193,7 @@ class ButtonClear(npyscreen.ButtonPress):
 
     def whenPressed(self):
         if not self.find_parent_app().getForm("MAIN").romScaned:
-            npyscreen.notify_confirm("Please scan rom first.", title="Error")
+            npyscreen.notify_confirm("Rom set file is not specified.", title="Error")
             return
 
         mode = self.find_parent_app().getForm("MAIN").wdgtRomFilterMode.value[0]
@@ -205,7 +207,7 @@ class ButtonList(npyscreen.ButtonPress):
 
     def whenPressed(self):
         if not self.find_parent_app().getForm("MAIN").romScaned:
-            npyscreen.notify_confirm("Please scan rom first.", title="Error")
+            npyscreen.notify_confirm("Rom set file is not specified.", title="Error")
             return
 
         mode = self.find_parent_app().getForm("MAIN").wdgtRomFilterMode.value[0]
@@ -245,7 +247,7 @@ class RomFilterMode(npyscreen.TitleSelectOne):
 class ButtonRomCode(npyscreen.ButtonPress):
     def __init__(self, *key, **argv):
         super().__init__(*key, **argv)
-        self.romcodeValue = []
+        self.romcodeValue = [0]
         self.romcodeText = []
         pass
 
@@ -295,7 +297,7 @@ class ButtonExRomCode(npyscreen.ButtonPress):
 class ButtonCountryCode(npyscreen.ButtonPress):
     def __init__(self, *key, **argv):
         super().__init__(*key, **argv)
-        self.itemValue = []
+        self.itemValue = [0]
         self.items = [x for k,x in LangCode().CODE.items()]
         self.text = []
 
@@ -310,11 +312,12 @@ class ButtonCountryCode(npyscreen.ButtonPress):
         self.itemValue= sorted(selectlist_form.getValue())
         if 0 in self.itemValue:
             self.text.append(LangCode().NameToCode(selectlist_form.getItems()[0]))
+            self.find_parent_app().getForm("MAIN").wdgtTextCountryCode.value = " ".join(["{}".format(x) for x in self.text])
         else:
             for idx in self.itemValue:
                 self.text.append(LangCode().NameToCode(selectlist_form.getItems()[idx]))
+            self.find_parent_app().getForm("MAIN").wdgtTextCountryCode.value = " ".join(["({})".format(x) for x in self.text])
 
-        self.find_parent_app().getForm("MAIN").wdgtTextCountryCode.value = " ".join(["({})".format(x) for x in self.text])
         self.find_parent_app().getForm("MAIN").wdgtTextCountryCode.display()
 
 class ButtonExCountryCode(npyscreen.ButtonPress):
@@ -372,15 +375,48 @@ class OtherOptionSelect(npyscreen.TitleMultiSelect):
                        "Extracts with Zip archiving."]
         self.value = [1]
 
+class MultiLineForRomInfo(npyscreen.MultiSelect):
+    def __init__(self, *key, **argv):
+        super().__init__(*key, **argv)
+        self.add_handlers({ord('i'): self.popup_info})
+
+    def popup_info(self, val):
+        item = self.values[self.cursor_line]
+        rom_list = []
+        for key in self.find_parent_app().archivedRomSetZip.archivedRomsDict.keys():
+            for rom in self.find_parent_app().archivedRomSetZip.archivedRomsDict[key].roms:
+                if item == rom.PureName():
+                    rom_list.append(os.path.basename(rom.filename))
+        popupform = self.find_parent_app().getForm("POPUPINFO")
+        popupform.name = "{}".format(item)
+        popupform.setItems(rom_list)
+        popupform.display()
+        popupform.edit()
+
+
+class MultiLineForArchiveInfo(npyscreen.MultiSelect):
+    def __init__(self, *key, **argv):
+        super().__init__(*key, **argv)
+        self.add_handlers({ord('i'): self.popup_info})
+
+    def popup_info(self, val):
+        item = self.values[self.cursor_line]
+        all_roms = self.find_parent_app().archivedRomSetZip.FileNameList(item)
+        popupform = self.find_parent_app().getForm("POPUPINFO")
+        popupform.name = "{}".format(item)
+        popupform.setItems(all_roms)
+        popupform.display()
+        popupform.edit()
+
 
 class FormRomComplete(npyscreen.ActionFormExpandedV2):
     def create(self):
-        self.multiline = self.add(npyscreen.MultiSelect)
+        self.multiline = self.add(MultiLineForRomInfo)
 
 
 class FormArchiveComplete(npyscreen.ActionFormExpandedV2):
     def create(self):
-        self.multiline = self.add(npyscreen.MultiSelect)
+        self.multiline = self.add(MultiLineForArchiveInfo)
 
 
 class FormMainMenu(npyscreen.ActionFormV2):
@@ -491,9 +527,9 @@ class FormMainMenu(npyscreen.ActionFormV2):
         self.wdgtRomFilterMode = self.add(RomFilterMode, max_width=41, max_height=4, value=0,
                                           values=["All Roms", "Selected Roms", "Selected Archives"], scroll_exit=True)
 
-        self.wdgtButtonSelect = self.add(ButtonSelect, name="Select Items", relx=41, rely=6)
-        self.wdgtButtonClear = self.add(ButtonClear, name="Clear Items", relx=41)
-        self.wdgtButtonList = self.add(ButtonList, name="Selected Items List", relx=41)
+        self.wdgtButtonSelect = self.add(ButtonSelect, name="Select", relx=41, rely=6)
+        self.wdgtButtonClear = self.add(ButtonClear, name="Clear", relx=41)
+        self.wdgtButtonList = self.add(ButtonList, name="List", relx=41)
         self.wdgtSetButtons = WidgetSet([self.wdgtButtonSelect,self.wdgtButtonClear,self.wdgtButtonList])
         self.wdgtSetButtons.hidden(True)
 
@@ -504,7 +540,7 @@ class FormMainMenu(npyscreen.ActionFormV2):
         self.wdgtText1.color = 'LABEL'
         self.wdgtButtonRomCode = self.add(ButtonRomCode,    name="Standard code           ")
         self.nextrely-=1
-        self.wdgtTextRomCode = self.add(npyscreen.Textfield, relx=30, editable=False)
+        self.wdgtTextRomCode = self.add(npyscreen.Textfield, relx=30, editable=False, value="All")
         self.wdgtButtonExRomCode = self.add(ButtonExRomCode,  name="Exclusion Standard code ")
         self.nextrely-=1
         self.wdgtTextExRomCode = self.add(npyscreen.Textfield, relx=30, editable=False)
@@ -515,7 +551,7 @@ class FormMainMenu(npyscreen.ActionFormV2):
         self.wdgtText2.color = 'LABEL'
         self.wdgtButtonCountyCode = self.add(ButtonCountryCode,   name="Country code           ")
         self.nextrely-=1
-        self.wdgtTextCountryCode = self.add(npyscreen.Textfield, relx=30, editable=False)
+        self.wdgtTextCountryCode = self.add(npyscreen.Textfield, relx=30, editable=False, value="All")
         self.wdgtButtonExCountryCode = self.add(ButtonExCountryCode , name="Exclusion Country code ")
         self.nextrely-=1
         self.wdgtTextExCountryCode = self.add(npyscreen.Textfield, relx=30, editable=False)
@@ -601,6 +637,7 @@ class AppRomExtractor(npyscreen.NPSAppManaged):
         self.itemlist_form = self.addForm("ITEMLIST", FormItemList)
         self.selectOne_form = self.addForm("SELECTONE", FormSelectOne)
         self.selectList_form = self.addForm("SELECTLIST", FormSelectList)
+        self.popupinfo_form = self.addForm("POPUPINFO", FormPopupInfo)
         self.selectListChgAble_form = self.addForm("SELECTLISTCHGABLE", FormSelectListWithOrderChangeable)
 
         self.complete_form = self.addForm("COMPLETE", FormRomComplete, name="Select ROMs")

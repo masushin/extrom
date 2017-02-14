@@ -353,13 +353,37 @@ class ArchivedRomSetZip(ArchivedRomSet):
             num += len(self.archivedRomsDict[key].roms)
         return num
 
-    def RomNameList(self):
-        list = []
-        for key in self.archivedRomsDict:
-            for rom in self.archivedRomsDict[key].roms:
-                root, ext = os.path.splitext(os.path.basename(rom.filename))
-                list.append(root)
-        return list
+    def RomNameList(self, archive=None):
+        if archive == None:
+            list = []
+            for key in self.archivedRomsDict:
+                for rom in self.archivedRomsDict[key].roms:
+                    root, ext = os.path.splitext(os.path.basename(rom.filename))
+                    list.append(root)
+            return list
+        else:
+            list = []
+            for key in self.archivedRomsDict:
+                if archive == os.path.basename(key):
+                    for rom in self.archivedRomsDict[key].roms:
+                        root, ext = os.path.splitext(os.path.basename(rom.filename))
+                        list.append(root)
+            return list
+
+    def FileNameList(self, archive=None):
+        if archive == None:
+            list = []
+            for key in self.archivedRomsDict:
+                for rom in self.archivedRomsDict[key].roms:
+                    list.append(os.path.basename(rom.filename))
+            return list
+        else:
+            list = []
+            for key in self.archivedRomsDict:
+                if archive == os.path.basename(key):
+                    for rom in self.archivedRomsDict[key].roms:
+                        list.append(os.path.basename(rom.filename))
+            return list
 
     def RomPureNameList(self):
         list = []
