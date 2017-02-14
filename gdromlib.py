@@ -33,6 +33,13 @@ class LangCode:
     def CodeKeyList(self):
         return list(self.CODE.keys())
 
+    def NameToCode(self, name):
+        for key,value in self.CODE.items():
+            if name == value:
+                return key
+        else:
+            return ""
+
     def CodeNameList(self):
         namelist = []
         keylist = self.CodeKeyList()
@@ -51,21 +58,25 @@ class LangCode:
 
 
 class RomCode:
-    CODE = {'all': "All codes", 'none': "No codes", 'good': "Good dump",
-            'alt': "Alternative ver", 'bad': "Bad dump", 'fixed': "Fixed dump",
-            'hacked': "Hacked ROM", 'overdumped': "Overdumped ROM",
-            'pirated': "Pirated ver", 'trained': "Trained ver",
-            'pending': "Pending ver", 'translated': "Translated ver"}
+    CODE = {'All': "All codes", 'None': "No code", '[!]': "[!] Good dump",
+            '[a]': "[a] Alternative version", '[b]': "[b] Bad dump",
+            '[f]': "[f] Fixed dump", '[h]': "[h] Hacked ROM",
+            '[o]': "[o] Overdumped ROM", '[p]': "[p] Pirated version",
+            '[t]': "[t] Trained version", '[!p]': "[!p] Pending dump",
+            '[T]': "[T] Translated version"}
 
     def __init__(self):
-        self.codes = {'all': False, 'none': False, 'good': False, 'alt': False,
-                      'bad': False, 'fixed': False, 'hacked': False,
-                      'overdumped': False, 'pirated': False,
-                      'trained': False, 'pending': False,
-                      'translated': False}
+        self.codes = dict(zip(self.CODE.keys(),[False for i in range(len(self.CODE))]))
 
     def CodeKeyList(self):
         return list(self.CODE.keys())
+
+    def NameToCode(self, name):
+        for key,value in self.CODE.items():
+            if name == value:
+                return key
+        else:
+            return "None"
 
     def CodeNameList(self):
         namelist = []
@@ -81,35 +92,31 @@ class RomCode:
     def setCodeByFilename(self, name):
         root, ext = os.path.splitext(name)
         self.clearCode()
-        self.codes['good'] = True if re.search("\[!\]", root) else False
-        self.codes['alt'] = True if re.search("\[a.*\]", root) else False
-        self.codes['bad'] = True if re.search("\[b.*\]", root) else False
-        self.codes['fixed'] = True if re.search(
-            "\[f[0-9+C]*\]", root) else False
-        self.codes['hacked'] = True if re.search("\[h.*\]", root) else False
-        self.codes['hacked'] = True if self.codes[
-            'hacked'] or re.search("\[f.*\]", root) else False
-        self.codes['overdumped'] = True if re.search(
-            "\[o.*\]", root) else False
-        self.codes['pirated'] = True if re.search("\[p.*\]", root) else False
-        self.codes['trained'] = True if re.search("\[t.*\]", root) else False
-        self.codes['pending'] = True if re.search("\[!p.*\]", root) else False
-        self.codes['translated'] = True if re.search(
-            "\[T.*\]", root) else False
+        self.codes['[!]'] = True if re.search("\[!\]", root) else False
+        self.codes['[a]'] = True if re.search("\[a.*\]", root) else False
+        self.codes['[b]'] = True if re.search("\[b.*\]", root) else False
+        self.codes['[f]'] = True if re.search("\[f[0-9+C]*\]", root) else False
+        self.codes['[h]'] = True if re.search("\[h.*\]", root) else False
+        self.codes['[h]'] = True if self.codes['[h]'] or re.search("\[f.*\]", root) else False
+        self.codes['[o]'] = True if re.search("\[o.*\]", root) else False
+        self.codes['[p]'] = True if re.search("\[p.*\]", root) else False
+        self.codes['[t]'] = True if re.search("\[t.*\]", root) else False
+        self.codes['[!p]'] = True if re.search("\[!p.*\]", root) else False
+        self.codes['[T]'] = True if re.search("\[T.*\]", root) else False
 
         for key, code in self.codes.items():
             if self.codes[key] == True:
                 break
         else:
-            self.codes['none'] = True
+            self.codes['None'] = True
 
         return
 
     def isMatch(self, romcode):
-        if self.codes['all']:
+        if self.codes['All']:
             return True
         for key in self.codes.keys():
-            if key == 'all':
+            if key == 'All':
                 continue
             if self.codes[key] and romcode.codes[key]:
                 return True
@@ -133,8 +140,8 @@ class RomCode:
 
     def getCodeText(self):
         text = []
-        if self.codes['all']:
-            return ["all"]
+        if self.codes['All']:
+            return ["All"]
         for key in self.codes.keys():
             if self.codes[key]:
                 text.append(key)
