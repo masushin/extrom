@@ -147,7 +147,7 @@ class TitleFileNameComboRomSet(npyscreen.TitleFilenameCombo):
             max_value = len(archiveRomSetZip.archivedRomsDict)
 
             progress_form = self.find_parent_app().getForm("PROGRESS")
-            progress_form.setDesc("Scanning Rom set file..")
+            progress_form.name = "Scanning .."
             progress_form.setProgress(0)
             progress_form.display()
 
@@ -163,6 +163,19 @@ class TitleFileNameComboRomSet(npyscreen.TitleFilenameCombo):
             self.find_parent_app().RomPureNameList = archiveRomSetZip.RomPureNameList()
         except:
             npyscreen.notify_confirm("Scanning is failed..")
+            self.value = None
+
+
+class TitleFileNameComboOutputPath(npyscreen.TitleFilenameCombo):
+    name = "OutputPath"
+
+    def when_value_edited(self):
+        if self.value == None:
+            return
+
+        if not os.path.isdir(self.value):
+            npyscreen.notify_confirm("Not directory.", title="Error")
+            self.value = None
 
 
 class ButtonSelect(npyscreen.ButtonPress):
@@ -350,7 +363,7 @@ class ButtonExCountryCode(npyscreen.ButtonPress):
 class ButtonOptions(npyscreen.ButtonPress):
     def __init__(self, *key, **argv):
         super().__init__(*key, **argv)
-        self.itemValues = ["Not extracts rom which has low priority LANG code.",
+        self.itemValues = ["Extracts roms according to priority of country code.",
                            "Extracts with Zip archiving."]
         self.itemValue = [1]
         pass
@@ -521,7 +534,7 @@ class FormMainMenu(npyscreen.ActionFormV2):
         self.wdgtRomPath = self.add(TitleFileNameComboRomSet)
         self.nextrely+=1
 
-        self.wdgtDestPath = self.add(npyscreen.TitleFilenameCombo, name="OutputPath")
+        self.wdgtDestPath = self.add(TitleFileNameComboOutputPath)
 
         self.nextrely+=1
         self.wdgtRomFilterMode = self.add(RomFilterMode, max_width=41, max_height=4, value=0,
