@@ -24,19 +24,21 @@ The following demo shows the step to extract good dump roms of "Thunder Force" s
 
 ## Usage
 
-* Executes the following command.
+Executes the following command.
+```bash
  extrom
+```
 
-* Steps for extracting roms
-- First, select "RomSetFile", and Press enter. File select dialog will appear. Please select "Romset file". "Romset file" must be struct like the following. Otherwise it make error.
+### Steps for extracting roms
+First, select "RomSetFile", and Press enter. File select dialog will appear. Please select "Romset file". "Romset file" must be struct like the following. Otherwise it make error.
   If specified file has no problem, scanning will start. It may need long time in the case of many rom is included.
 
-- After scanning is done, progress dialog will close. Select "OutputPath", Press Enter and selects directory where you want to extract Roms to.
+After scanning is done, progress dialog will close. Select "OutputPath", Press Enter and selects directory where you want to extract Roms to.
 
-- Select "RomFilterMode". Please select mode you want.
- - All Roms : Filters to all roms which is included in specified Romset.
- - Selected Roms : Filters by selected rom (game) name.
- - Selected Archives : Filters by selected archive file.
+Select "RomFilterMode". Please select mode you want.
++ All Roms : Filters to all roms which is included in specified Romset.
++ Selected Roms : Filters by selected rom (game) name.
++ Selected Archives : Filters by selected archive file.
 
  If you selects "Selected Roms" or "Selected Archives", 3 buttons will appear on right side.
 - "Select" button
