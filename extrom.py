@@ -126,7 +126,7 @@ class FormSelectOne(npyscreen.Form, FormDescription):
         self.option.values = option
         self.option.display()
 
-class FormPopupInfo(npyscreen.Popup,FormItems):
+class FormPopupInfo(npyscreen.PopupWide,FormItems):
     def create(self):
         self.list = self.add(npyscreen.MultiLine)
 
@@ -370,7 +370,7 @@ class ButtonOptions(npyscreen.ButtonPress):
 
     def whenPressed(self):
         selectlist_form = self.find_parent_app().getForm("SELECTLIST")
-        selectlist_form.setDesc("Selects Option")
+        selectlist_form.setDesc("Other Configuration")
         selectlist_form.setItems(self.itemValues, self.itemValue)
         selectlist_form.display()
         selectlist_form.edit()
@@ -422,12 +422,12 @@ class MultiLineForArchiveInfo(npyscreen.MultiSelect):
         popupform.edit()
 
 
-class FormRomComplete(npyscreen.ActionFormExpandedV2):
+class FormRomComplete(npyscreen.Form):
     def create(self):
         self.multiline = self.add(MultiLineForRomInfo)
 
 
-class FormArchiveComplete(npyscreen.ActionFormExpandedV2):
+class FormArchiveComplete(npyscreen.Form):
     def create(self):
         self.multiline = self.add(MultiLineForArchiveInfo)
 
@@ -549,31 +549,29 @@ class FormMainMenu(npyscreen.ActionFormV2):
         self.nextrely+=2
 
         # Standard Code
-        self.wdgtText1 = self.add(npyscreen.Textfield, value="Standard code filter", editable=False)
+        self.wdgtText1 = self.add(npyscreen.Textfield, value="Good code filter", editable=False)
         self.wdgtText1.color = 'LABEL'
-        self.wdgtButtonRomCode = self.add(ButtonRomCode,    name="Standard code           ")
+        self.wdgtButtonRomCode = self.add(ButtonRomCode,    name="Standard code          :")
         self.nextrely-=1
         self.wdgtTextRomCode = self.add(npyscreen.Textfield, relx=30, editable=False, value="All")
-        self.wdgtButtonExRomCode = self.add(ButtonExRomCode,  name="Exclusion Standard code ")
+        self.wdgtButtonExRomCode = self.add(ButtonExRomCode,  name="Exclusion Standard code:")
         self.nextrely-=1
         self.wdgtTextExRomCode = self.add(npyscreen.Textfield, relx=30, editable=False)
 
         # Country Code
         self.nextrely+=1
-        self.wdgtText2 = self.add(npyscreen.Textfield, value="Country code filter", editable=False)
-        self.wdgtText2.color = 'LABEL'
-        self.wdgtButtonCountyCode = self.add(ButtonCountryCode,   name="Country code           ")
+        self.wdgtButtonCountyCode = self.add(ButtonCountryCode,   name="Country code           :")
         self.nextrely-=1
         self.wdgtTextCountryCode = self.add(npyscreen.Textfield, relx=30, editable=False, value="All")
-        self.wdgtButtonExCountryCode = self.add(ButtonExCountryCode , name="Exclusion Country code ")
+        self.wdgtButtonExCountryCode = self.add(ButtonExCountryCode , name="Exclusion Country code :")
         self.nextrely-=1
         self.wdgtTextExCountryCode = self.add(npyscreen.Textfield, relx=30, editable=False)
 
         #Other Options
         self.nextrely+=1
-        self.wdgtText3 = self.add(npyscreen.Textfield, value="Other Options", editable=False)
+        self.wdgtText3 = self.add(npyscreen.Textfield, value="Other Configuration", editable=False)
         self.wdgtText3.color = 'LABEL'
-        self.wdgtButtonOptions = self.add(ButtonOptions,    name="Options ")
+        self.wdgtButtonOptions = self.add(ButtonOptions,    name="Config ")
 
         # self.wdgtRomCodeSelect = self.add(npyscreen.TitleMultiSelect, name="Rom code",
         #                                   values=RomCode().CodeNameList(), value=[0], rely=14, max_width=50, max_height=7)
