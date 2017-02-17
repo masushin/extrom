@@ -27,7 +27,7 @@ p7zip is needed to extract 7z archive.
 
 Executes the following command.
 ```bash
- extrom
+$ extrom
 ```
 
 ### Steps for extracting roms
@@ -97,9 +97,6 @@ Outputs Roms as zip file.
 
 ## Installation
 
-pip install extrom
-
-
-## Anything Else
-
-## License
+```bash
+$ pip install extrom
+```
