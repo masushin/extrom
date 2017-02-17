@@ -10,7 +10,7 @@ extrom is tool which can extract any roms that matched to specified condition fr
 
 The following demo shows the step to extract good dump roms of "Thunder Force" series for Japanese ver.
 
-
+![Extracts "Thunder Force" series roms](https://github.com/masushin/extrom/blob/master/data/demo.gif)
 
 ## Features
 
