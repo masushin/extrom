@@ -25,7 +25,7 @@ setup(
     url='https://github.com/masushin/extrom',
 
     # Author details
-    author='Shinsuke Masuda',
+    author='masushin',
     author_email='shinsuke.masuda@gmail.com',
 
     # Choose your license
