@@ -85,13 +85,15 @@ Priority has no mean if option "Extracts roms according to priority of country c
 #### Other Configuration
 Configuration dialog will appear by pressing "Config" button.
 
-##### "Not extracts rom which has low priority LANG code"
++ Not extracts rom which has low priority LANG code
+
 If this config is enabled, only rom which has highest priority country code in selected codes will be extracted.
 For example, select "Japanese" and "United states" and set higher priority to "United states".
 If a rom archive includes both Japanese ver and US ver, only US ver rom will be extracted. If not includes US ver, Japanese ver (If it be included) will be extracted.
 It is useful for the case of that you want extract all roms from rom set file but not want to extract roms which differ by only country code.
 
-##### "Extracts with Zip archiving."
++ Extracts with Zip archiving
+
 Outputs Roms as zip file.
 
 
