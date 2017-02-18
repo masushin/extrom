@@ -32,7 +32,18 @@ $ extrom
 
 ### Steps for extracting roms
 First, select "RomSetFile", and Press enter. File select dialog will appear. Please select "Romset file". "Romset file" must be struct like the following. Otherwise it make error.
-  If specified file has no problem, scanning will start. It may need long time in the case of many rom is included.
+
+```
+ RomSetFile.zip
+  +- RomSet1.7z
+  |   +- Rom [!].rom
+  |   +- Rom [h].rom
+  +- RomSet2.7z
+      +- Rom2 [!].rom
+      +- Rom2 [a].rom
+```
+
+If specified file has no problem, scanning will start. It may need long time in the case of many rom is included.
 
 After scanning is done, progress dialog will close. Select "OutputPath", Press Enter and selects directory where you want to extract Roms to.
 
