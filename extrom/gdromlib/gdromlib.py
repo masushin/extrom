@@ -332,7 +332,7 @@ class ArchivedRomSetZip(ArchivedRomSet):
         with zipfile.ZipFile(self.path, mode="r") as z:
             infolist = z.infolist()
             for info in infolist:
-                if not info.is_dir():
+                if not info.file_size == 0:
                     root, ext = os.path.splitext(
                         os.path.basename(info.filename))
                     if ext == ".7z":
