@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from extrom.gdromlib import ArchivedRom7z, ArchivedRomSetZip, ExtractFilter, LangCode, RomCode, color
+from gdromlib.gdromlib import ArchivedRom7z, ArchivedRomSetZip, ExtractFilter, LangCode, RomCode, color
 import os
 import sys
 import npyscreen
